@@ -7,7 +7,7 @@ uint8_t KEY_FLAG = 0;
 
 float Wheel_Left_Speed = 0;
 
-double sum = 0;
+double Encoder = 0;
 double Position_Left = 0.0;
 
 #define Car_Wheel_diameter    65
@@ -42,9 +42,14 @@ void Trolley_Movement(void)
 	Target_Left = 50;
 	Target_Right = 50;
 
-	sum += (float)Encoder_Left;
-	Wheel_Left_Speed = (float)Encoder_Left*((PI*Car_Wheel_diameter) / CAR_Quadruple_Pulse);
-	Position_Left = sum * 0.001 * 0.12;
+	Encoder += (float)Encoder_Left;       
+	//每10ms读取编码器脉冲值进行累加
+	Wheel_Left_Speed = (float)Encoder_Left * 100 / 7643;
+	//每米脉冲数 = 一圈脉冲值 /（PI*半径）
+	//1560 /（0.065 * 3.14）约=7643    （米/秒）放大100倍10ms
+	Position_Left = Encoder * 0.001 * 0.127;
+	//实际位移 = 编码器累加值 *（PI * 半径 * 车轴齿轮数/编码器齿轮数/减速比30/一圈总脉冲值）
+	//转换单位
 
 	OLED_ShowString(0, 00, "Car_Speed:");
 	OLED_Showdecimal(0, 10, Wheel_Left_Speed, 8, 12);

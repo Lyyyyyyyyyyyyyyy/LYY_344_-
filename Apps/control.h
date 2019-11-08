@@ -6,6 +6,7 @@
 extern int Target_Left;
 extern int Target_Right;
 extern uint8_t KEY_FLAG;
+extern double Encoder;
 
 //位带操作,实现51类似的GPIO控制功能
 //具体实现思想,参考<<CM3权威指南>>第五章(87页~92页).
