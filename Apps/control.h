@@ -5,7 +5,8 @@
 
 extern int Target_Left;
 extern int Target_Right;
-extern uint8_t KEY_FLAG;
+extern uint8_t Mode_FLAG;
+extern double Encoder;
 
 //位带操作,实现51类似的GPIO控制功能
 //具体实现思想,参考<<CM3权威指南>>第五章(87页~92页).
@@ -71,9 +72,10 @@ extern uint8_t KEY_FLAG;
 #define PWM_RIGHT_A     TIM8->CCR4 
 #define PWM_LEFT_B      TIM8->CCR1 
 #define PWM_RIGHT_B     TIM8->CCR2 
+#define SERVO           TIM1->CCR1
 
 void JTAG_Set(u8 mode);
-void Set_Pwm(int motor_left, int motor_right);
+void Set_Pwm(int motor_left, int motor_right, int servo);
 void Trolley_Movement(void);
 
 #endif    /*__CONTROL_H*/

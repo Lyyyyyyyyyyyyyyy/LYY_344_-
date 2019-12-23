@@ -17,6 +17,7 @@
 #include "Motor.h"
 #include "Servo.h"
 #include "Oled.h"
+#include "Buleteeth.h"
 
 #include "bsp_nvic.h"
 #include "bsp_tim.h"

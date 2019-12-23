@@ -569,6 +569,11 @@
               <FileType>1</FileType>
               <FilePath>..\Devices\Oled.c</FilePath>
             </File>
+            <File>
+              <FileName>Buleteeth.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Devices\Buleteeth.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

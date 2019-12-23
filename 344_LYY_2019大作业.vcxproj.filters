@@ -129,6 +129,9 @@
     <ClCompile Include="Devices\Oled.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Devices\Buleteeth.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Apps\control.h">
@@ -255,6 +258,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Devices\oledfont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Devices\Buleteeth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

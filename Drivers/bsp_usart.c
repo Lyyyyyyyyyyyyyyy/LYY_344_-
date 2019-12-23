@@ -11,7 +11,7 @@
 #include "bsp_usart.h"
 
 /**
-* @brief  USART1快速初始化
+* @brief  USART1快速初始化（收发）
 * @param  USART_BaudRate 	波特率设置
 * @retval None
 * @Using  用于pc端发送，接收调试信息
@@ -24,7 +24,7 @@ void USART1_QuickInit(uint32_t USART_BaudRate)
 	/* 使能 GPIO 时钟 */
 	RCC_APB1PeriphClockCmd(USART1_TX_GPIO_CLK, ENABLE);
 	/* 使能 USART3时钟 */
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
 
 	/* 配置Tx引脚  */
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
@@ -60,7 +60,46 @@ void USART1_QuickInit(uint32_t USART_BaudRate)
 	//USART_ITConfig(USART3, USART_IT_IDLE, ENABLE);
 
 	/* 使能串口 */
-	USART_Cmd(USART3, ENABLE);
+	USART_Cmd(USART1, ENABLE);
+}
+
+/**
+ * @brief  UART4快速初始化（蓝牙）
+ * @param  USART_BaudRate 	波特率设置
+ * @retval None
+ * @Using  用于pc端发送，接收调试信息
+ */
+void UART4_Config(uint32_t Baudrate)
+{
+	USART_InitTypeDef USART_InitStruct;
+	GPIO_InitTypeDef  GPIO_InitStruct;
+
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, ENABLE);
+
+	NVIC_Config(UART4_IRQn,0,1);
+
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10;
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_InitStruct.GPIO_Pin = GPIO_Pin_11;
+	GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+	USART_InitStruct.USART_BaudRate = Baudrate;
+	USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+	USART_InitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+	USART_InitStruct.USART_Parity = USART_Parity_No;
+	USART_InitStruct.USART_StopBits = USART_StopBits_1;
+	USART_InitStruct.USART_WordLength = USART_WordLength_8b;
+	USART_Init(UART4, &USART_InitStruct);
+
+	USART_ITConfig(UART4, USART_IT_RXNE, ENABLE);
+	USART_ClearITPendingBit(UART4, USART_IT_RXNE);
+
+	USART_Cmd(UART4, ENABLE);
 }
 
 //重定向c库函数printf到串口，重定向后可使用printf函数
@@ -73,5 +112,11 @@ int fputc(int ch, FILE *f)
 	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
 
 	return (ch);
+}
+
+int fgetc(FILE *f)
+{
+	while (USART_GetFlagStatus(UART4, USART_FLAG_RXNE) == RESET);
+	return (int)USART_ReceiveData(UART4);
 }
 

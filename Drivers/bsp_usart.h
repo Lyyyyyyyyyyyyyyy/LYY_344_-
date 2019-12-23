@@ -16,7 +16,9 @@
 /********USART1_Pin_define_END********/
 
 void USART1_QuickInit(uint32_t USART_BaudRate);
+void UART4_Config(uint32_t Baudrate);	
 
 int fputc(int ch, FILE *f);
+int fgetc(FILE *f);
 
 #endif /* __BSP_USART_H */

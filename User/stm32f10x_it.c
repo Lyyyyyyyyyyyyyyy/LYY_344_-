@@ -160,7 +160,7 @@ void EXTI15_10_IRQHandler(void)
 		OLED_Clear();
 		OLED_ShowString(0, 00, "Car_start");
 		OLED_Refresh_Gram();
-		KEY_FLAG = 1;
+		Mode_FLAG = 1;
 	}
 	EXTI_ClearITPendingBit(EXTI_Line14);
 }
@@ -175,17 +175,23 @@ void TIM6_IRQHandler(void)
 		Motor_Left = Position_PID_LEFT(Encoder_Left, Target_Left);
 		Motor_Right = Position_PID_RIGHT(Encoder_Right, Target_Right);
 
-		Set_Pwm(Motor_Left, Motor_Right);
+		Set_Pwm(Motor_Left, Motor_Right, 15);
 		
 		TIM6->SR &= ~(1 << 0);
 	}
-	if (KEY_FLAG)
+	if (Mode_FLAG == 1)        //KEY按键两米模式
 	{
 		Trolley_Movement();
 	}
 }
 
-
+void UART4_IRQHandler(void)
+{
+	if (USART_GetITStatus(UART4, USART_IT_RXNE) != RESET)
+	{
+		REMOTE_CONTROL();
+	}
+}
 
 /**
   * @}

@@ -100,6 +100,7 @@
   <ItemGroup>
     <ClCompile Include="Apps\control.c" />
     <ClCompile Include="Apps\PID.c" />
+    <ClCompile Include="Devices\Buleteeth.c" />
     <ClCompile Include="Devices\Encoder.c" />
     <ClCompile Include="Devices\Motor.c" />
     <ClCompile Include="Devices\Oled.c" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="Apps\control.h" />
     <ClInclude Include="Apps\PID.h" />
+    <ClInclude Include="Devices\Buleteeth.h" />
     <ClInclude Include="Devices\Encoder.h" />
     <ClInclude Include="Devices\Motor.h" />
     <ClInclude Include="Devices\Oled.h" />

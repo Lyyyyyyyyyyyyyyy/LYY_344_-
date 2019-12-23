@@ -3,11 +3,11 @@
 int Target_Left = 0;
 int Target_Right = 0;
 
-uint8_t KEY_FLAG = 0;
+uint8_t Mode_FLAG = 0;
 
 float Wheel_Left_Speed = 0;
 
-double sum = 0;
+double Encoder = 0;
 double Position_Left = 0.0;
 
 #define Car_Wheel_diameter    65
@@ -24,7 +24,7 @@ void JTAG_Set(u8 mode)
 	AFIO->MAPR |= temp;
 }
 
-void Set_Pwm(int motor_left, int motor_right)
+void Set_Pwm(int motor_left, int motor_right, int servo)
 {
 	if (motor_left > 0)
 		PWM_LEFT_A = 7200, PWM_LEFT_B = 7200 - motor_left;
@@ -35,6 +35,9 @@ void Set_Pwm(int motor_left, int motor_right)
 		PWM_RIGHT_A = 7200, PWM_RIGHT_B = 7200 - motor_right;
 	else
 		PWM_RIGHT_B = 7200, PWM_RIGHT_A = 7200 + motor_right;
+
+	Servo = servo;
+
 }
 
 void Trolley_Movement(void)
@@ -42,9 +45,14 @@ void Trolley_Movement(void)
 	Target_Left = 50;
 	Target_Right = 50;
 
-	sum += (float)Encoder_Left;
-	Wheel_Left_Speed = (float)Encoder_Left*((PI*Car_Wheel_diameter) / CAR_Quadruple_Pulse);
-	Position_Left = sum * 0.001 * 0.12;
+	Encoder += (float)Encoder_Left;       
+	//每10ms读取编码器脉冲值进行累加
+	Wheel_Left_Speed = (float)Encoder_Left * 100 / 7643;
+	//每米脉冲数 = 一圈脉冲值 /（PI*半径）
+	//1560 /（0.065 * 3.14）约=7643    （米/秒）放大100倍10ms
+	Position_Left = Encoder * 0.001 * 0.127;
+	//实际位移 = 编码器累加值 *（PI * 半径 * 车轴齿轮数/编码器齿轮数/减速比30/一圈总脉冲值）
+	//转换单位
 
 	OLED_ShowString(0, 00, "Car_Speed:");
 	OLED_Showdecimal(0, 10, Wheel_Left_Speed, 8, 12);
@@ -58,7 +66,7 @@ void Trolley_Movement(void)
 	{
 		Target_Left = 0;
 		Target_Right = 0;
-		KEY_FLAG = 0;
+		Mode_FLAG = 0;
 
 		OLED_Clear();
 		OLED_ShowString(0, 00, "Car_Stop!!!");

@@ -13,8 +13,8 @@
 /**
 * @brief  NVIC中断优先级配置
 * @param  IRQChannel 	  	中断源
-*		      MainPriority	  主优先级
-*			    SubPriority		  抢占式优先级
+*		  MainPriority	    主优先级
+*		  SubPriority	    抢占式优先级
 * @retval None
 */
 
